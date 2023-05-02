@@ -1,0 +1,25 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Project exclude paths
+/modules/barcode_scanner_zebra/build/
+/modules/common/common-data-local/build/
+/modules/common/common-data-remote/build/
+/modules/common/common-domain/build/
+/modules/common/common-presentation/build/
+/modules/common/common-util/build/
+/modules/qr/barcode-camera-presentation/build/
+/modules/qr/barcode-scanner-presentation/build/

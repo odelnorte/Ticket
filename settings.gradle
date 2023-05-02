@@ -1,0 +1,38 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Ticket"
+include ':app'
+
+include ':modules:qr:barcode-scanner-presentation'
+include ':modules:qr:barcode-camera-presentation'//; project(':modules:qr:barcode-camera-presentation').projectDir = file("$rootDir/../../qr/barcode-camera-presentation")
+
+include ':modules:barcode_scanner_zebra'
+
+include ':modules:common:common-domain'
+include ':modules:common:common-presentation'//; project(':modules:common:common-presentation').projectDir = file("$rootDir/../../Common/common-presentation")
+include ':modules:common:common-util'//; project(':modules:common:common-util').projectDir = file("$rootDir/../../Common/common-util")
+include ':modules:common:common-data-remote'
+include ':modules:common:common-data-local'//; project(':modules:common:common-data-local').projectDir = file("$rootDir/../../Common/common-data-local")
+
+include ':ticket-data-local'
+include ':ticket-data-repository'
+include ':ticket-data-remote'
+include ':ticket-domain'
+include ':ticket-presentation-status'
+include ':ticket-presentation-pending'
+include ':ticket-presentation-detail'
+include ':ticket-presentation-registration'
+include ':ticket-presentation-technical'
+include ':ticket-presentation-technical-detail'

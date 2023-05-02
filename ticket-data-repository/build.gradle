@@ -1,0 +1,35 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+apply from: "$rootProject.projectDir/gradlescripts/build.gradle"
+
+android {
+    namespace 'com.zitro.games.ticket.data.repository'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation(project(path: ":ticket-domain"))
+
+    implementation project(path: ':modules:common:common-domain')
+    implementation project(path: ':modules:common:common-data-remote')
+
+    implementation coroutines.coroutinesAndroid
+    implementation persistence.roomPagingCommon
+    testImplementation test.junit
+    testImplementation test.coroutines
+    testImplementation test.mockito
+    implementation di.hiltAndroid
+    kapt di.hiltCompiler
+}

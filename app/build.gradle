@@ -1,0 +1,108 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+apply from: "$rootProject.projectDir/gradlescripts/build.gradle"
+
+android {
+    namespace 'com.zitro.games.ticket'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.zitro.games.ticket"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.0'
+    }
+}
+
+dependencies {
+    implementation project(path: ':modules:common:common-domain')
+    implementation project(path: ':modules:common:common-presentation')
+    implementation project(path: ':modules:common:common-util')
+    implementation project(path: ':modules:common:common-data-local')
+    implementation project(path: ':modules:common:common-data-remote')
+
+    implementation(project(path: ':modules:qr:barcode-scanner-presentation'))
+    implementation(project(path: ':modules:qr:barcode-camera-presentation'))
+    implementation(project(path: ':modules:barcode_scanner_zebra'))
+
+    implementation(project(path: ":ticket-data-local"))
+    implementation(project(path: ":ticket-data-repository"))
+    implementation(project(path: ":ticket-data-remote"))
+    implementation(project(path: ":ticket-domain"))
+    implementation(project(path: ":ticket-presentation-status"))
+    implementation(project(path: ":ticket-presentation-pending"))
+    implementation(project(path: ":ticket-presentation-detail"))
+    implementation(project(path: ":ticket-presentation-registration"))
+    implementation(project(path: ":ticket-presentation-technical"))
+    implementation(project(path: ":ticket-presentation-technical-detail"))
+
+    implementation androidx.core
+    implementation androidx.appCompat
+    implementation androidx.composeUi
+    implementation androidx.composeMaterial3
+    implementation androidx.composeUiToolingPreview
+    implementation androidx.lifecycleRuntimeKtx
+    implementation androidx.composeActivity
+    implementation androidx.navigationCompose
+    implementation androidx.hiltNavigationCompose
+    implementation androidx.hiltNavigationCompose
+
+    implementation network.okHttp
+    implementation network.retrofit
+    implementation network.gson
+    implementation network.converterGson
+    implementation network.loggingInterceptor
+
+    implementation persistence.roomRuntime
+    implementation persistence.roomKtx
+    implementation persistence.datastore
+    kapt persistence.roomCompiler
+
+    implementation camera.cameraMlkitVision
+    implementation camera.barcodeScanning
+    implementation camera.cameraCamera2
+    implementation camera.cameraView
+    implementation camera.cameraExtensions
+    implementation camera.cameraLifecycle
+    implementation androidx.window
+
+    implementation accompanist.permission
+    implementation accompanist.systemuicontroller
+    
+    implementation lottie.lottie
+
+    implementation di.hiltAndroid
+    kapt di.hiltCompiler
+
+    testImplementation test.junit
+    androidTestImplementation androidTest.junit
+    androidTestImplementation androidTest.espressoCore
+    androidTestImplementation androidTest.idlingResource
+    androidTestImplementation androidTest.core
+    androidTestImplementation androidTest.rules
+    androidTestImplementation androidTest.runner
+    androidTestImplementation androidTest.hilt
+    kaptAndroidTest androidTest.hiltCompiler
+    androidTestImplementation androidTest.composeUiTestJunit
+    debugImplementation androidTest.composeManifest
+    androidTestUtil androidTest.orchestrator
+}

@@ -1,0 +1,117 @@
+
+android {
+    flavorDimensions "platform"
+
+    buildTypes {
+        prod {
+            minifyEnabled false
+            debuggable = true
+            signingConfig signingConfigs.debug
+            consumerProguardFiles "consumer-rules.pro"
+            buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.110.76.16/"'
+            buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
+        }
+
+        dev {
+            minifyEnabled false
+            debuggable = true
+            signingConfig signingConfigs.debug
+            consumerProguardFiles "consumer-rules.pro"
+            buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.10.0.252:8082/"'
+            buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
+        }
+
+        qa {
+            minifyEnabled false
+            debuggable = true
+            signingConfig signingConfigs.debug
+            consumerProguardFiles "consumer-rules.pro"
+            buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.10.0.252:8082/"'
+            buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
+        }
+
+        prodRelease {
+            minifyEnabled false
+            debuggable = true
+            signingConfig signingConfigs.debug
+            consumerProguardFiles "consumer-rules.pro"
+            buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.10.0.11/"'
+            buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
+        }
+
+    }
+
+    productFlavors {
+        warehouseSpain {
+            dimension "platform"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "NAME_DB", '"warehouse_spain_db"'
+            buildConfigField "String", "NAME_PREFERENCE", '"warehouse_spain_preference"'
+        }
+
+        atServiceSpain {
+            dimension "platform"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "NAME_DB", '"at_service_spain_db"'
+            buildConfigField "String", "NAME_PREFERENCE", '"at_service_spain_preference"'
+        }
+
+        warehouseMexico {
+            dimension "platform"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "NAME_DB", '"warehouse_mexico_db"'
+            buildConfigField "String", "NAME_PREFERENCE", '"warehouse_mexico_preference"'
+        }
+    }
+
+    android.variantFilter { variant ->
+        if (variant.buildType.name.contains("release") or variant.buildType.name.contains("debug")) {
+            variant.setIgnore(true)
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+def fileName = project.name
+
+task assembleAtServiceDispersion(type: GradleBuild) {
+    if (!enviroment.build.contains("release") &&
+            !enviroment.build.contains("debug") &&
+            !fileName.contains("app")) {
+
+        def productCap = enviroment.productATService.capitalize()
+        def typeBuildCap = enviroment.build.capitalize()
+
+        assembleAtServiceDispersion.dependsOn "assemble$productCap$typeBuildCap"
+        println("Project name is: "+ enviroment.productATService)
+        doLast {
+            enviroment.directoriesAtService.each {
+                def path = it
+                def routeInto = "$rootDir/../../$path/$fileName"
+
+                if (fileName)
+                    copy {
+                        from "$buildDir/outputs/aar/$fileName-$enviroment.productATService-$enviroment.build"+".aar"
+                        into routeInto
+                        rename("$fileName-$enviroment.productATService-$enviroment.build"+".aar", fileName + ".aar")
+                    }
+                new File(routeInto, "build.gradle").text = "configurations.maybeCreate(\"default\")\n" +
+                        "artifacts.add(\"default\", file('$fileName"+".aar'))"
+            }
+        }
+    }
+}
