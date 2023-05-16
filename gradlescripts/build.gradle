@@ -5,36 +5,32 @@ android {
     buildTypes {
         prod {
             minifyEnabled false
-            debuggable = true
             signingConfig signingConfigs.debug
-            consumerProguardFiles "consumer-rules.pro"
+            debuggable true
             buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.110.76.16/"'
             buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
         }
 
         dev {
             minifyEnabled false
-            debuggable = true
             signingConfig signingConfigs.debug
-            consumerProguardFiles "consumer-rules.pro"
+            debuggable true
             buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.10.0.252:8082/"'
             buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
         }
 
         qa {
             minifyEnabled false
-            debuggable = true
             signingConfig signingConfigs.debug
-            consumerProguardFiles "consumer-rules.pro"
+            debuggable true
             buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.10.0.252:8082/"'
             buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
         }
 
         prodRelease {
             minifyEnabled false
-            debuggable = true
             signingConfig signingConfigs.debug
-            consumerProguardFiles "consumer-rules.pro"
+            debuggable true
             buildConfigField "String", "BASE_URL_WAREHOUSE_SPAIN", '"http://10.10.0.11/"'
             buildConfigField "String", "BASE_URL_AT_SERVICE_SPAIN", '"http://10.10.2.8:3200/"'
         }

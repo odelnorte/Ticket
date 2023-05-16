@@ -1,9 +1,9 @@
 package com.zitro.games.ticket.presentation.adetail.view.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -49,10 +49,7 @@ fun ZGTPPTicketDetail(
         .padding(10.dp)
     ) {
         val modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f)
-            .padding(0.dp)
-            .border(1.dp, MaterialTheme.colorScheme.tertiary)
+            .height(25.dp)
 
         val modifierText = Modifier
             .padding(2.dp)

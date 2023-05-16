@@ -8,11 +8,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.zitro.games.presentation.common.navigation.input.ticket.CPTicketPendingInput
 import com.zitro.games.presentation.common.ui.custom.bar.ZGPCTopAppBar
 import com.zitro.games.ticket.presentation.pending.ZGTPPTicketPendingViewModel
 import com.zitro.games.ticket.presentation.pending.ZGTPTicketPendingUiSingleEvent
+import com.zitro.games.ticket.presentation.pending.view.dialog.ZGTPPTicketTechnicalFilterDialog
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,6 +24,7 @@ fun ZGTPPTicketPendingScreen(
     catalogInput: CPTicketPendingInput,
     navController: NavController
 ){
+    val openFilter = remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             ZGPCTopAppBar(
@@ -29,19 +32,24 @@ fun ZGTPPTicketPendingScreen(
             )
         }
     ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .padding(contentPadding)
+        ConstraintLayout(
+            modifier = Modifier.padding(contentPadding)
         ) {
+
+            val (tab, listTickets) = createRefs()
             var selectedIndex by remember { mutableStateOf(0) }
             val list = listOf("Asignados", "Por Asignar", "Por Sala")
 
 
             TabRow(selectedTabIndex = selectedIndex,
                 modifier = Modifier
-                    .padding(vertical = 4.dp, horizontal = 8.dp)
+                    .padding(vertical = 0.dp, horizontal = 8.dp)
                     .clip(RoundedCornerShape(50))
-                    .padding(1.dp),
+                    .padding(1.dp)
+                    .constrainAs(tab) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(listTickets.top)
+                    }.fillMaxHeight(.1f),
                 indicator = {
                     Box {
 
@@ -74,21 +82,29 @@ fun ZGTPPTicketPendingScreen(
                 }
             }
 
+            val modifier = Modifier
+                .constrainAs(listTickets) {
+                    top.linkTo(tab.bottom)
+                    bottom.linkTo(parent.bottom)
+                }.fillMaxHeight(.9f)
+
             when(selectedIndex){
                 0 ->{
-                    ZGTPPTicketMyPendingScreen(viewModel, navController)
+                    ZGTPPTicketMyPendingScreen(modifier, viewModel, openFilter, navController)
                 }
 
                 1 ->{
-                    ZGTPPTicketAllPendingScreen(viewModel, navController)
+                    ZGTPPTicketAllPendingScreen(modifier, viewModel, openFilter, navController)
                 }
 
                 2 ->{
-                    ZGTPPTicketByRoomPendingScreen(viewModel, navController)
+                    ZGTPPTicketByRoomPendingScreen(modifier, viewModel, openFilter, navController)
                 }
             }
         }
     }
+
+    ZGTPPTicketTechnicalFilterDialog(openFilter)
 
     LaunchedEffect(Unit) {
         viewModel.singleEventFlow.collectLatest {

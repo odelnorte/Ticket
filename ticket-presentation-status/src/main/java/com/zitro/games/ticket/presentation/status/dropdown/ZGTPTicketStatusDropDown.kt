@@ -6,9 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight.Companion.W100
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.zitro.games.ticket.presentation.status.ZGPTStatusListModel
 import com.zitro.games.util.common.R
 
@@ -62,7 +60,7 @@ fun ZGPCTicketStatusDropDown(
             onDismissRequest = {
                 expanded = false
             },
-            modifier = Modifier.exposedDropdownSize()
+            //modifier = Modifier.exposedDropdownSize()
         ) {
             data.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -75,7 +73,7 @@ fun ZGPCTicketStatusDropDown(
                     text = {
                         Column {
                             Text(text = selectionOption.statusName)
-                            Text(text = selectionOption.statusDescription, fontWeight = W100, fontSize = 10.sp)
+                            //Text(text = selectionOption.statusTaskReferring, fontWeight = W100, fontSize = 10.sp)
                         }
                     },
                     onClick = {

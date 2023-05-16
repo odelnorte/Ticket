@@ -1,13 +1,18 @@
 package com.zitro.games.ticket.presentation.pending.view.pending
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.navigation.NavController
 import com.zitro.games.domain.common.entity.ZGCDTypeLoadList
 import com.zitro.games.presentation.common.ui.custom.list.ZGPCStateComponent
@@ -16,11 +21,12 @@ import com.zitro.games.presentation.common.ui.model.ZGPCListModel
 import com.zitro.games.ticket.presentation.pending.ZGTPPTicketPending
 import com.zitro.games.ticket.presentation.pending.ZGTPPTicketPendingViewModel
 import com.zitro.games.ticket.presentation.pending.ZGTPTicketPendingUiAction
-import com.zitro.games.ticket.presentation.pending.view.ZGTPPTicketAssign
 
 @Composable
-fun ColumnScope.ZGTPPTicketMyPendingScreen(
+fun ConstraintLayoutScope.ZGTPPTicketMyPendingScreen(
+    modifier: Modifier,
     viewModel: ZGTPPTicketPendingViewModel,
+    openFilter: MutableState<Boolean>,
     navController: NavController
 ){
     val componentState = remember { mutableStateOf(
@@ -66,11 +72,9 @@ fun ColumnScope.ZGTPPTicketMyPendingScreen(
     )
 
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
-            .fillMaxHeight()
-            .weight(9f)
-            .padding(10.dp),
+            .padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -85,15 +89,12 @@ fun ColumnScope.ZGTPPTicketMyPendingScreen(
                     viewModel.submitAction(ZGTPTicketPendingUiAction.Detail(detail))
                 }
             },
+            openFilter = openFilter,
             onPage = {
                 if (componentState.value?.typeLoad == ZGCDTypeLoadList.REFRESH){
 
                 }
             }
         )
-    }
-
-    ZGTPPTicketAssign {
-
     }
 }

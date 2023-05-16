@@ -26,7 +26,6 @@ dependencies {
     implementation project(path: ':modules:common:common-data-remote')
 
     implementation coroutines.coroutinesAndroid
-    implementation persistence.roomPagingCommon
     testImplementation test.junit
     testImplementation test.coroutines
     testImplementation test.mockito

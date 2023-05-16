@@ -23,7 +23,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.3'
     }
 }
 
@@ -35,13 +35,15 @@ dependencies {
     implementation(project(path: ":ticket-domain"))
 
     implementation coroutines.coroutinesAndroid
-    implementation androidx.composeUi
-    implementation androidx.composeMaterial3
-    implementation persistence.roomPagingCompose
     implementation androidx.viewModelKtx
     implementation androidx.viewModelCompose
     implementation androidx.lifecycleRuntimeKtx
     implementation androidx.navigationCompose
+    implementation androidx.foundation
+    implementation androidx.constraintlayout
+
+    implementation androidx.composeUi
+    implementation androidx.composeMaterial3
     implementation androidx.composeUiToolingPreview
     implementation di.hiltAndroid
     kapt di.hiltCompiler

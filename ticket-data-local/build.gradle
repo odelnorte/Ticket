@@ -33,7 +33,6 @@ dependencies {
     implementation persistence.roomKtx
     kapt persistence.roomCompiler
     implementation persistence.datastore
-    implementation persistence.roomPagingCommon
     implementation di.hiltAndroid
     kapt di.hiltCompiler
 

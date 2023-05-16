@@ -4,6 +4,8 @@ interface ZGTPTicketRegistrationApiModel
 
 data class ZGPTRegistrationApiModel(
     val client: String = "",
+    val region: String = "",
+    val room: String = "",
     val model: String = "",
     val noSeries: String = "",
     val failure: String = "",

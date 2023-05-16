@@ -1,13 +1,18 @@
 package com.zitro.games.ticket.presentation.status
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.zitro.games.presentation.common.navigation.input.ticket.CPTicketStatusInput
 import com.zitro.games.presentation.common.state.CommonScreen
@@ -48,7 +53,7 @@ fun ZGTPStatusScreen(
 
     LaunchedEffect(Unit) {
         viewModel.submitAction(ZGTPTicketStatusUiAction.Loading(
-            ZGTDTicketStatusRequest(catalogInput.dataUser.userId ?: 0L)
+            ZGTDTicketStatusRequest(token = catalogInput.dataUser.token ?: "")
         ))
     }
 
@@ -56,7 +61,9 @@ fun ZGTPStatusScreen(
         CommonScreen(state = state, onAction = {
             when(it){
                 ZGPCMessageTypeButton.ZGPC_BUTTON_RETRY -> {
-
+                    viewModel.submitAction(ZGTPTicketStatusUiAction.Loading(
+                        ZGTDTicketStatusRequest(token = catalogInput.dataUser.token ?: "")
+                    ))
                 }
             }
         }) {
@@ -72,40 +79,30 @@ fun ZGTPStatusScreen(
         topBar = {
             TopAppBar(
                 title = {
-
-                    Row {
-                        Text(
-                            modifier = Modifier.weight(1f).fillMaxWidth(),
-                            text = "Admin"
-                        )
-
+                    Column {
                         Text(
                             modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                                .padding(end = 10.dp),
-                            textAlign = TextAlign.End,
-                            text =  statusSelected.value.statusName
+                                .fillMaxWidth(),
+                            text = "Admin"
                         )
                     }
                 }
             )
         }
     ) { contentPadding ->
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(contentPadding),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+        ConstraintLayout(
+            modifier = Modifier.padding(contentPadding)
         ) {
+            val (column1, column2) = createRefs()
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center,
+                    .constrainAs(column1) {
+                        top.linkTo(parent.top, margin = 0.dp)
+                        bottom.linkTo(column2.top, margin = 0.dp)
+                    }
+                    .fillMaxHeight(.9f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -123,7 +120,7 @@ fun ZGTPStatusScreen(
                     )
                 }
 
-                if (statusSelected.value.statusType == ZGC_TYPE_STATUS_SERVICE){
+                if (statusSelected.value.statusId == ZGC_TYPE_STATUS_SERVICE){
                     if (roomsApiModel.value.listRooms.isNotEmpty()){
                         Text(
                             modifier = Modifier
@@ -145,9 +142,13 @@ fun ZGTPStatusScreen(
 
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .constrainAs(column2) {
+                        top.linkTo(column1.bottom, margin = 0.dp)
+                        bottom.linkTo(parent.bottom, margin = 20.dp)
+                    }
+                    .fillMaxHeight(.1f)
                     .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .padding(horizontal = 40.dp),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -156,10 +157,11 @@ fun ZGTPStatusScreen(
 
                     },
                     modifier = Modifier
-                        .height(50.dp)
                         .fillMaxWidth()
-                        .padding(start = 35.dp, end = 35.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                        .height(60.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    )
                 ) {
                     Text(
                         ctx.getString(

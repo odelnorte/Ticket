@@ -14,12 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.zitro.games.presentation.common.navigation.input.ticket.CPTicketDetailInput
 import com.zitro.games.ticket.presentation.adetail.ZGTPPTicketDetailViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("SimpleDateFormat")
 @Composable
 fun ZGTPPTicketDetailComment(
@@ -71,37 +73,45 @@ fun ZGTPPTicketDetailComment(
             Modifier
                 .padding(10.dp)
         ) {
-            Box(
-                contentAlignment = Alignment.CenterStart,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-            ){
-                Text(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    text = comment.trimIndent()
-                )
-            }
-
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 15.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Bottom
+            ConstraintLayout(
+                modifier = Modifier.fillMaxWidth()
             ) {
+                val (box, textField, button) = createRefs()
+
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                    modifier = Modifier
+                        .constrainAs(box) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(bottom = 20.dp)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                ){
+                    Text(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .padding(4.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        text = comment.trimIndent()
+                    )
+                }
+
                 TextField(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp)
-                        .weight(7f),
+                        .constrainAs(textField) {
+                            top.linkTo(box.bottom)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            end.linkTo(button.start, margin = 0.dp)
+                        }
+                        .fillMaxWidth(.7f)
+                        .padding(bottom = 10.dp),
                     value = sedComment,
                     onValueChange = {
                         sedComment = it
@@ -111,10 +121,14 @@ fun ZGTPPTicketDetailComment(
 
                 Button(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
+                        .constrainAs(button) {
+                            top.linkTo(box.bottom)
+                            start.linkTo(textField.end, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
+                        }
+                        .fillMaxWidth(.3f)
                         .padding(start = 5.dp, end = 10.dp, bottom = 10.dp)
-                        .weight(2f),
+                    ,
                     onClick = {
                         comment = "${comment}Admin: ${format.format(date)} $sedComment"
                         sedComment = ""

@@ -23,7 +23,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.3'
     }
 }
 
@@ -37,12 +37,13 @@ dependencies {
     implementation coroutines.coroutinesAndroid
     implementation androidx.composeUi
     implementation androidx.composeMaterial3
-    implementation persistence.roomPagingCompose
     implementation androidx.viewModelKtx
     implementation androidx.viewModelCompose
     implementation androidx.lifecycleRuntimeKtx
     implementation androidx.navigationCompose
     implementation androidx.composeUiToolingPreview
+    implementation androidx.constraintlayout
+    implementation androidx.foundation
     implementation di.hiltAndroid
     kapt di.hiltCompiler
     testImplementation test.junit

@@ -23,9 +23,8 @@ class ZGTPTicketStatusConverter @Inject constructor(@ApplicationContext private 
             listStatusApiModel.add(
                 ZGPTStatusListModel(
                     statusId = it.statusId,
-                    statusType = it.statusType,
                     statusName = it.statusName,
-                    statusDescription = it.statusDescription,
+                    statusTaskReferring = it.statusTaskReferring
                 )
             )
         }

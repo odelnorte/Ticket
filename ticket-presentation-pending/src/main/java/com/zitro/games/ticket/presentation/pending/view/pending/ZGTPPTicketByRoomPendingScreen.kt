@@ -1,12 +1,20 @@
 package com.zitro.games.ticket.presentation.pending.view.pending
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.navigation.NavController
 import com.zitro.games.domain.common.entity.ZGCDTypeLoadList
 import com.zitro.games.presentation.common.state.CommonScreen
@@ -15,15 +23,18 @@ import com.zitro.games.presentation.common.ui.custom.list.ZGWSWidgetList
 import com.zitro.games.presentation.common.ui.custom.model.button.ZGPCMessageTypeButton
 import com.zitro.games.presentation.common.ui.model.ZGPCListModel
 import com.zitro.games.ticket.domain.entity.rooms.ZGTDTicketRoomsRequest
-import com.zitro.games.ticket.presentation.pending.*
-import com.zitro.games.ticket.presentation.pending.view.ZGTPPTicketAssign
-import com.zitro.games.ticket.presentation.pending.view.dropdown.ZGTPPTicketRoomsDropDown
-import com.zitro.games.util.common.R
-import java.util.*
+import com.zitro.games.ticket.presentation.pending.ZGTPPTicketPending
+import com.zitro.games.ticket.presentation.pending.ZGTPPTicketPendingViewModel
+import com.zitro.games.ticket.presentation.pending.ZGTPPTicketRoomsApiModel
+import com.zitro.games.ticket.presentation.pending.ZGTPPTicketRoomsModel
+import com.zitro.games.ticket.presentation.pending.ZGTPTicketPendingUiAction
+import java.util.Locale
 
 @Composable
-fun ColumnScope.ZGTPPTicketByRoomPendingScreen(
+fun ConstraintLayoutScope.ZGTPPTicketByRoomPendingScreen(
+    modifier: Modifier,
     viewModel: ZGTPPTicketPendingViewModel,
+    openFilter: MutableState<Boolean>,
     navController: NavController
 ){
     val componentState = remember { mutableStateOf(
@@ -97,76 +108,39 @@ fun ColumnScope.ZGTPPTicketByRoomPendingScreen(
         )
     )
 
-    Column(
-        modifier = Modifier
+    Row(
+        modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 10.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(2f),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(start = 20.dp, top = 20.dp),
-                text = ctx.getString(
-                    R.string.zgc_screen_ticket_label_status_rooms
-                )
-            )
-
-            ZGTPPTicketRoomsDropDown(
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 20.dp, top = 20.dp),
-                data = roomsApiModel.value.listRooms,
-                room = roomSelected
-            )
-        }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(9f)
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ZGWSWidgetList(
-                modifier = Modifier,
-                data = (if (myPending.isNotEmpty()){
-                    myPending.filter {
-                        it.item.room
-                            .lowercase(Locale.ROOT)
-                            .contains(
-                                roomSelected.value.roomName
-                                    .lowercase(Locale.ROOT)
-                            )
-                    }
-                } else myPending).toSet(),
-                title = "Folios por Sala",
-                textFilter = "",
-                reset = remember { mutableStateOf(componentState.value?.reset!!) },
-                items = { _, model ->
-                    ZGTPPTicketPendingItem(model){ detail ->
-                        viewModel.submitAction(ZGTPTicketPendingUiAction.Detail(detail))
-                    }
-                },
-                onPage = {
-                    if (componentState.value?.typeLoad == ZGCDTypeLoadList.REFRESH){
-
-                    }
+        ZGWSWidgetList(
+            modifier = Modifier,
+            data = (if (myPending.isNotEmpty()){
+                myPending.filter {
+                    it.item.room
+                        .lowercase(Locale.ROOT)
+                        .contains(
+                            roomSelected.value.roomName
+                                .lowercase(Locale.ROOT)
+                        )
                 }
-            )
-        }
+            } else myPending).toSet(),
+            title = "Folios por Sala",
+            textFilter = "",
+            reset = remember { mutableStateOf(componentState.value?.reset!!) },
+            items = { _, model ->
+                ZGTPPTicketPendingItem(model){ detail ->
+                    viewModel.submitAction(ZGTPTicketPendingUiAction.Detail(detail))
+                }
+            },
+            openFilter = openFilter,
+            onPage = {
+                if (componentState.value?.typeLoad == ZGCDTypeLoadList.REFRESH){
 
-        ZGTPPTicketAssign {
-
-        }
+                }
+            }
+        )
     }
 }

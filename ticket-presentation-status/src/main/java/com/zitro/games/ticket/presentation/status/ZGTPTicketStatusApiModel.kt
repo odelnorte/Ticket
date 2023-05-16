@@ -1,7 +1,13 @@
 package com.zitro.games.ticket.presentation.status
 
-import com.zitro.games.util.common.*
 import com.zitro.games.util.common.R
+import com.zitro.games.util.common.ZGC_TYPE_STATUS_DAY_OF_REST
+import com.zitro.games.util.common.ZGC_TYPE_STATUS_INABILITY
+import com.zitro.games.util.common.ZGC_TYPE_STATUS_INCIDENT
+import com.zitro.games.util.common.ZGC_TYPE_STATUS_MIX
+import com.zitro.games.util.common.ZGC_TYPE_STATUS_OUT_SERVICE
+import com.zitro.games.util.common.ZGC_TYPE_STATUS_SERVICE
+import com.zitro.games.util.common.ZGC_TYPE_STATUS_VACATION
 
 interface ZGTPTicketApiModel
 
@@ -15,20 +21,18 @@ data class ZGPTRoomsApiModel(
 
 
 data class ZGPTStatusListModel(
-    val statusId: Int = 0,
-    val statusType: Int = 0,
+    val statusId: Int = 39,
     val statusName: String = "",
-    val statusImage: String = "",
-    val statusDescription: String = ""
+    val statusTaskReferring: String = ""
 ){
-    fun getIcon() = when(statusType){
+    fun getIcon() = when(statusId){
         ZGC_TYPE_STATUS_SERVICE -> {
             R.drawable.zgm_ic_service
         }
         ZGC_TYPE_STATUS_INCIDENT -> {
             R.drawable.zgm_ic_incident
         }
-        ZGC_TYPE_STATUS_DAY_OF_REST -> {
+        ZGC_TYPE_STATUS_OUT_SERVICE, ZGC_TYPE_STATUS_DAY_OF_REST -> {
             R.drawable.zgm_ic_day_of_rest
         }
         ZGC_TYPE_STATUS_MIX -> {

@@ -27,9 +27,8 @@ class ZGTDLTicketStatusLocalDataSourceImpl @Inject constructor(
             listStatusResponse.add(
                 ZGTDTicketStatusResponse(
                     statusId = it.statusId,
-                    statusType = it.statusType,
                     statusName = it.statusName,
-                    statusDescription = it.statusDescription,
+                    statusTaskReferring = it.statusTaskReferring
                 )
             )
         }
@@ -44,9 +43,8 @@ class ZGTDLTicketStatusLocalDataSourceImpl @Inject constructor(
             listStatusEntity.add(
                 ZGCDLStatusEntity(
                     statusId = it.statusId,
-                    statusType = it.statusType,
                     statusName = it.statusName,
-                    statusDescription = it.statusDescription,
+                    statusTaskReferring = it.statusTaskReferring
                 )
             )
         }
