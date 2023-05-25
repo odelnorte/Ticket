@@ -36,3 +36,8 @@ include ':ticket-presentation-detail'
 include ':ticket-presentation-registration'
 include ':ticket-presentation-technical'
 include ':ticket-presentation-technical-detail'
+
+include ':modules:session:session-domain'//; project(':modules:session:session-domain').projectDir = file("$rootDir/../session/session-domain")
+include ':modules:session:session-data-repository'//; project(':modules:session:session-data-repository').projectDir = file("$rootDir/../session/session-data-repository")
+include ':modules:session:session-data-local'//; project(':modules:session:session-data-local').projectDir = file("$rootDir/../session/session-data-local")
+

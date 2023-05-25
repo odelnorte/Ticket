@@ -1,8 +1,5 @@
 package com.zitro.games.ticket.data.remote.source
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.zitro.games.ticket.data.remote.mock.ZGTDRDataMockTicketRooms.dataTicketRooms
 import com.zitro.games.ticket.data.remote.networking.ZGTDRTicketRoomsService
 import com.zitro.games.ticket.data.remote.networking.model.api.ZGTDRTicketRoomsApiModel
 import com.zitro.games.ticket.data.repository.remote.ZGTDRRemoteTicketRoomsDataSource
@@ -19,16 +16,11 @@ class ZGTDRemoteTicketRoomsDataSourceImpl @Inject constructor(
 ): ZGTDRRemoteTicketRoomsDataSource {
 
     override fun getRooms(request: ZGTDTicketRoomsRequest) = flow {
-        emit(
-            Gson().fromJson(
-                dataTicketRooms,
-                object : TypeToken<List<ZGTDRTicketRoomsApiModel>>() {}.type
-            ) as List<ZGTDRTicketRoomsApiModel>
-        )
+        emit(roomsService.rooms(request.token, request.regionId))
     }.map {
-        convert(it)
+        convert(it.data)
     }.catch {
-        throw ZGTDUseCaseException.TicketStatusException(it)
+        throw ZGTDUseCaseException.TicketRoomsException(it)
     }
 
 
@@ -39,7 +31,8 @@ class ZGTDRemoteTicketRoomsDataSourceImpl @Inject constructor(
             listStatusResponse.add(
                 ZGTDTicketRoomsResponse(
                     roomId = it.roomId,
-                    roomName = it.roomName
+                    roomName = it.roomName,
+                    officeId = it.officeId
                 )
             )
         }

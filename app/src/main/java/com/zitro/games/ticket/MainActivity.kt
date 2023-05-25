@@ -48,7 +48,12 @@ fun App(navController: NavHostController) {
                 hiltViewModel(),
                 CPTicketPendingInput(
                     dataUser = CPDataUserApiModel(
-                        userId = 0,
+                        area = "",
+                        department = "",
+                        lastName = "",
+                        name = "",
+                        user = "",
+                        usuId = 0L,
                         token = """bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c3VhcmlvIjoiQWRtaW5pc3RyYWRvciIsIm5vbWJyZSI6IkFkbWluIiwiYXBlbGxpZG8iOiIiLCJhcmVhIjoiYWRtaW5pc3RyYWRvciIsImRlcGFydGFtZW50byI6IkFkbWluaXN0cmFkb3IifSwiaWF0IjoxNjgwMDU4NzU0fQ.DFXy5KYAaOTuf0vHr3Z0frbRbHVxCb21nmSu-jFLzrY""".trimIndent()
                     )
                 ), navController
@@ -68,7 +73,12 @@ fun App(navController: NavHostController) {
                 hiltViewModel(),
                 CPTicketRegistrationInput(
                     dataUser = CPDataUserApiModel(
-                        userId = 0,
+                        area = "",
+                        department = "",
+                        lastName = "",
+                        name = "",
+                        user = "",
+                        usuId = 0L,
                         token = """bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c3VhcmlvIjoiQWRtaW5pc3RyYWRvciIsIm5vbWJyZSI6IkFkbWluIiwiYXBlbGxpZG8iOiIiLCJhcmVhIjoiYWRtaW5pc3RyYWRvciIsImRlcGFydGFtZW50byI6IkFkbWluaXN0cmFkb3IifSwiaWF0IjoxNjgwMDU4NzU0fQ.DFXy5KYAaOTuf0vHr3Z0frbRbHVxCb21nmSu-jFLzrY""".trimIndent()
                     )
                 ),
@@ -101,12 +111,20 @@ fun App(navController: NavHostController) {
         }
 
         composable(route = NavRoutes.AtServiceTicketStatus.route) {
-            ZGTPStatusScreen(hiltViewModel(), CPTicketStatusInput(
-                dataUser = CPDataUserApiModel(
-                    userId = 0,
-                    token = """bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c3VhcmlvIjoiQWRtaW5pc3RyYWRvciIsIm5vbWJyZSI6IkFkbWluIiwiYXBlbGxpZG8iOiIiLCJhcmVhIjoiYWRtaW5pc3RyYWRvciIsImRlcGFydGFtZW50byI6IkFkbWluaXN0cmFkb3IifSwiaWF0IjoxNjgwMDU4NzU0fQ.DFXy5KYAaOTuf0vHr3Z0frbRbHVxCb21nmSu-jFLzrY""".trimIndent()
-                )
-            ), navController)
+            ZGTPStatusScreen(hiltViewModel(),
+                CPTicketStatusInput(
+                    dataUser = CPDataUserApiModel(
+                        area = "",
+                        department = "",
+                        lastName = "",
+                        name = "",
+                        user = "",
+                        usuId = 0L,
+                        token = """bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c3VhcmlvIjoiQWRtaW5pc3RyYWRvciIsIm5vbWJyZSI6IkFkbWluIiwiYXBlbGxpZG8iOiIiLCJhcmVhIjoiYWRtaW5pc3RyYWRvciIsImRlcGFydGFtZW50byI6IkFkbWluaXN0cmFkb3IifSwiaWF0IjoxNjgwMDU4NzU0fQ.DFXy5KYAaOTuf0vHr3Z0frbRbHVxCb21nmSu-jFLzrY""".trimIndent()
+                    )
+                ),
+                navController
+            )
         }
     }
 }

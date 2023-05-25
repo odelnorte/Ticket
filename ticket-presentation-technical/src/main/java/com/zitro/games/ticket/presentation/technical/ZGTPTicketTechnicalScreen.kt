@@ -10,24 +10,30 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.zitro.games.domain.common.entity.ZGCDTypeLoadList
-import com.zitro.games.presentation.common.navigation.input.ticket.CPTicketTechnicalDetailInput
+import com.zitro.games.presentation.common.navigation.NavRoutes
 import com.zitro.games.presentation.common.navigation.input.ticket.CPTicketTechnicalInput
-import com.zitro.games.presentation.common.navigation.input.ticket.model.CPDataTechnicalApiModel
+import com.zitro.games.presentation.common.navigation.navigateDest
+import com.zitro.games.presentation.common.state.CommonScreenAction
 import com.zitro.games.presentation.common.ui.custom.bar.ZGPCTopAppBar
 import com.zitro.games.presentation.common.ui.custom.dialog.ZGPCFilterDialog
+import com.zitro.games.presentation.common.ui.custom.dialog.ZGPCMessageDialog
 import com.zitro.games.presentation.common.ui.custom.list.ZGPCStateComponent
 import com.zitro.games.presentation.common.ui.custom.list.ZGWSWidgetList
 import com.zitro.games.presentation.common.ui.custom.model.button.ZGPCMessageTypeButton
 import com.zitro.games.presentation.common.ui.custom.model.button.ZGPCParserButton
 import com.zitro.games.presentation.common.ui.custom.model.dialog.ZGPCFilterTypeDialog
+import com.zitro.games.presentation.common.ui.custom.model.dialog.ZGPCMessageTypeDialog
 import com.zitro.games.presentation.common.ui.custom.model.dialog.ZGPCParserDialog
 import com.zitro.games.presentation.common.ui.custom.model.dropdown.ZGPCFilterTypeDropDown
 import com.zitro.games.presentation.common.ui.custom.model.dropdown.ZGPCModelListDropDown
@@ -35,7 +41,13 @@ import com.zitro.games.presentation.common.ui.custom.model.dropdown.ZGPCParserDr
 import com.zitro.games.presentation.common.ui.custom.model.textfield.ZGPCFilterTypeTextField
 import com.zitro.games.presentation.common.ui.custom.model.textfield.ZGPCParserTextField
 import com.zitro.games.presentation.common.ui.model.ZGPCListModel
-import com.zitro.games.util.common.ZGUTypeStatus
+import com.zitro.games.ticket.domain.entity.technical.ZGTDTicketTechnicalRequest
+import com.zitro.games.ticket.domain.usecase.ZGTDTicketReassignUseCase
+import com.zitro.games.ticket.domain.usecase.ZGTDTicketTechnicalUseCase
+import com.zitro.games.ticket.presentation.technical.model.ZGPTicketReassignApiModel
+import com.zitro.games.ticket.presentation.technical.model.ZGPTicketTechnicalListModel
+import com.zitro.games.ticket.presentation.technical.model.ZGPTicketTechnicalTechnicalApiModel
+import com.zitro.games.util.common.R
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,14 +55,33 @@ import kotlinx.coroutines.flow.collectLatest
 fun ZGTPPTicketTechnicalScreen(
     viewModel: ZGTPTicketTechnicalViewModel,
     technicalInput: CPTicketTechnicalInput,
-    navController: NavController
+    navController: NavHostController
 ){
-    val componentState = remember { mutableStateOf(
-        ZGPCStateComponent(ZGCDTypeLoadList.REFRESH)
-    )}
 
     val openFilter = remember { mutableStateOf(false) }
     val ctx = LocalContext.current
+    val componentState = remember { mutableStateOf(
+        ZGPCStateComponent(ZGCDTypeLoadList.REFRESH)
+    )}
+    val massage = remember { mutableStateOf("")}
+    val openDialogMessage = remember { mutableStateOf(false) }
+    val openDialogQuestion = remember { mutableStateOf(false) }
+    var technicalId by remember { mutableStateOf(0) }
+
+    val technicals = remember {
+        mutableStateOf<List<ZGPCListModel<ZGPTicketTechnicalListModel>>>(
+            listOf()
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.submitAction(ZGTPTicketTechnicalUiAction.Loading(
+            ZGTDTicketTechnicalRequest(
+                token = technicalInput.dataUser.token ?: "",
+                regionId = technicalInput.dataRegion.regionId ?: 0
+            )
+        ))
+    }
 
     Scaffold(
         topBar = {
@@ -64,63 +95,6 @@ fun ZGTPPTicketTechnicalScreen(
                     .padding(padding)
                     .fillMaxHeight()
             ) {
-                val technicals = mutableListOf<ZGPCListModel<ZGPTicketTechnicalListModel>>()
-
-                technicals.addAll(
-                    listOf(
-                        ZGPCListModel(
-                            id = "0",
-                            name = "Brandon Alexis Martinez",
-                            number = "515151515",
-                            item = ZGPTicketTechnicalListModel(
-                                technicalId = 0,
-                                technicalName = "Brandon Alexis Martinez",
-                                status = ZGUTypeStatus.ZGC_TYPE_STATUS_SERVICE
-                            )
-                        ),
-                        ZGPCListModel(
-                            id = "0",
-                            name = "Enrique Roldan",
-                            number = "63566356",
-                            item = ZGPTicketTechnicalListModel(
-                                technicalId = 0,
-                                technicalName = "Enrique Roldan",
-                                status = ZGUTypeStatus.ZGC_TYPE_STATUS_DAY_OF_REST
-                            )
-                        ),
-                        ZGPCListModel(
-                            id = "0",
-                            name = "Fernando de Jesus Cervantes",
-                            number = "6543567",
-                            item = ZGPTicketTechnicalListModel(
-                                technicalId = 0,
-                                technicalName = "Fernando de Jesus Cervantes",
-                                status = ZGUTypeStatus.ZGC_TYPE_STATUS_MIX
-                            )
-                        ),
-                        ZGPCListModel(
-                            id = "0",
-                            name = "Carlos Arturo Cortes",
-                            number = "2634534",
-                            item = ZGPTicketTechnicalListModel(
-                                technicalId = 0,
-                                technicalName = "Carlos Arturo Cortes",
-                                status = ZGUTypeStatus.ZGC_TYPE_STATUS_INABILITY
-                            )
-                        ),
-                        ZGPCListModel(
-                            id = "0",
-                            name = "Israel Cuellar",
-                            number = "75685687",
-                            item = ZGPTicketTechnicalListModel(
-                                technicalId = 0,
-                                technicalName = "Israel Cuellar",
-                                status = ZGUTypeStatus.ZGC_TYPE_STATUS_VACATION
-                            )
-                        )
-                    )
-                )
-
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -131,21 +105,17 @@ fun ZGTPPTicketTechnicalScreen(
                 ) {
                     ZGWSWidgetList(
                         modifier = Modifier,
-                        data = technicals.toSet(),
+                        data = technicals.value.toSet(),
                         title = "Técnicos disponibles",
                         textFilter = "",
                         reset = remember { mutableStateOf(componentState.value?.reset!!) },
                         items = { _, model ->
-                            ZGTPPTicketTechnicalItem(model){ detail ->
-                                viewModel.submitAction(ZGTPTicketTechnicalUiAction.TechnicalDetail(
-                                    CPTicketTechnicalDetailInput(
-                                        technicalInput.dataUser,
-                                        CPDataTechnicalApiModel(
-                                            model.technicalId.toLong(),
-                                            model.technicalName
-                                        )
-                                    )
-                                ))
+                            ZGTPPTicketTechnicalItem(model) {
+                                massage.value = ctx.getString(
+                                    R.string.zgc_screen_dialog_ticket_reassign_question, it.technicalUser.userName
+                                )
+                                openDialogQuestion.value = true
+                                technicalId = it.technicalId
                             }
                         },
                         openFilter = openFilter,
@@ -155,6 +125,33 @@ fun ZGTPPTicketTechnicalScreen(
                             }
                         }
                     )
+                }
+
+
+
+                viewModel.uiStateFlow.collectAsState().value.let { state ->
+                    CommonScreenAction(state = state, onAction = { event, request ->
+                        when(event){
+                            ZGPCMessageTypeButton.ZGPC_BUTTON_RETRY -> {
+                                when(request){
+                                    is ZGTDTicketTechnicalUseCase.Request ->
+                                        viewModel.submitAction(ZGTPTicketTechnicalUiAction.Loading(request.technicalRequest))
+                                    is ZGTDTicketReassignUseCase.Request ->
+                                        viewModel.submitAction(ZGTPTicketTechnicalUiAction.TechnicalTicketReassign(request.reassignRequest))
+                                }
+                            }
+                        }
+                    })  {
+                        when(it){
+                            is ZGPTicketTechnicalTechnicalApiModel -> technicals.value = it.listStatus
+                            is ZGPTicketReassignApiModel -> {
+                                openDialogMessage.value = true
+                                massage.value = ctx.getString(
+                                    R.string.zgc_screen_dialog_ticket_reassign_message, it.ticketId.toString()
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -218,26 +215,6 @@ fun ZGTPPTicketTechnicalScreen(
                         description = "",
                         ZGPCFilterTypeDropDown.ZGPC_DROPDOWN_REGION
                     )
-                ),
-                ZGPCFilterTypeDropDown.ZGPC_DROPDOWN_CLIENT to listOf(
-                    ZGPCModelListDropDown(
-                        id = 18,
-                        content = "Gran Madrid Torrelodones",
-                        description = "",
-                        ZGPCFilterTypeDropDown.ZGPC_DROPDOWN_CLIENT
-                    ),
-                    ZGPCModelListDropDown(
-                        id = 38,
-                        content = "Admiral Casino San Roque ",
-                        description = "",
-                        ZGPCFilterTypeDropDown.ZGPC_DROPDOWN_CLIENT
-                    ),
-                    ZGPCModelListDropDown(
-                        id = 47,
-                        content = "Casino Barcelona",
-                        description = "",
-                        ZGPCFilterTypeDropDown.ZGPC_DROPDOWN_CLIENT
-                    )
                 )
             )
         ),
@@ -249,6 +226,49 @@ fun ZGTPPTicketTechnicalScreen(
         openDialogCustom = openFilter
     ) {
 
+    }
+
+    ZGPCMessageDialog(
+        typeDialog =  ZGPCParserDialog.dialog(
+            ctx, ZGPCMessageTypeDialog.ZGPC_DIALOG_WARNING
+        ),
+        buttons = ZGPCParserButton.dialogButton(
+            ctx, listOf(
+                ZGPCMessageTypeButton.ZGPC_BUTTON_CANCEL,
+                ZGPCMessageTypeButton.ZGPC_BUTTON_CONTINUE,
+            )
+        ),
+        message = massage.value,
+        openDialogCustom = openDialogQuestion
+    ) {
+        when(it){
+            ZGPCMessageTypeButton.ZGPC_BUTTON_CANCEL -> {
+
+            }
+
+            ZGPCMessageTypeButton.ZGPC_BUTTON_CONTINUE -> {
+
+            }
+        }
+    }
+
+    ZGPCMessageDialog(
+        typeDialog =  ZGPCParserDialog.dialog(
+            ctx, ZGPCMessageTypeDialog.ZGPC_DIALOG_WARNING
+        ),
+        buttons = ZGPCParserButton.dialogButton(
+            ctx, listOf(
+                ZGPCMessageTypeButton.ZGPC_BUTTON_CONTINUE,
+            )
+        ),
+        message = massage.value,
+        openDialogCustom = openDialogMessage
+    ) {
+        when(it){
+            ZGPCMessageTypeButton.ZGPC_BUTTON_CONTINUE -> {
+                navController.navigateDest(NavRoutes.AtServiceHome.route)
+            }
+        }
     }
 
     LaunchedEffect(Unit) {

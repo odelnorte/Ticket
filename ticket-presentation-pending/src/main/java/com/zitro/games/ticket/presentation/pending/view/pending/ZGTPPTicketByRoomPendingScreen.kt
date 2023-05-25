@@ -20,9 +20,7 @@ import com.zitro.games.domain.common.entity.ZGCDTypeLoadList
 import com.zitro.games.presentation.common.state.CommonScreen
 import com.zitro.games.presentation.common.ui.custom.list.ZGPCStateComponent
 import com.zitro.games.presentation.common.ui.custom.list.ZGWSWidgetList
-import com.zitro.games.presentation.common.ui.custom.model.button.ZGPCMessageTypeButton
 import com.zitro.games.presentation.common.ui.model.ZGPCListModel
-import com.zitro.games.ticket.domain.entity.rooms.ZGTDTicketRoomsRequest
 import com.zitro.games.ticket.presentation.pending.ZGTPPTicketPending
 import com.zitro.games.ticket.presentation.pending.ZGTPPTicketPendingViewModel
 import com.zitro.games.ticket.presentation.pending.ZGTPPTicketRoomsApiModel
@@ -53,20 +51,14 @@ fun ConstraintLayoutScope.ZGTPPTicketByRoomPendingScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.submitAction(
+        /*viewModel.submitAction(
             ZGTPTicketPendingUiAction.LoadingRooms(
                 ZGTDTicketRoomsRequest(0L)
-            ))
+            ))*/
     }
 
     viewModel.uiStateFlow.collectAsState().value.let { state ->
-        CommonScreen(state = state, onAction = {
-            when(it){
-                ZGPCMessageTypeButton.ZGPC_BUTTON_RETRY -> {
-
-                }
-            }
-        }) {
+        CommonScreen(state = state) {
             when(it){
                 is ZGTPPTicketRoomsApiModel -> roomsApiModel.value = it
             }
@@ -123,7 +115,7 @@ fun ConstraintLayoutScope.ZGTPPTicketByRoomPendingScreen(
                         .lowercase(Locale.ROOT)
                         .contains(
                             roomSelected.value.roomName
-                                .lowercase(Locale.ROOT)
+                                ?.lowercase(Locale.ROOT) ?: ""
                         )
                 }
             } else myPending).toSet(),

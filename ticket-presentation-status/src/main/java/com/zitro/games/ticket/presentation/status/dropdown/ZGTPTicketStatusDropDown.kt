@@ -28,7 +28,7 @@ fun ZGPCTicketStatusDropDown(
     ) {
         TextField(
             readOnly = true,
-            value = status.value.statusName,
+            value = status.value.statusName ?: "",
             modifier = Modifier.menuAnchor(),
             onValueChange = { },
             leadingIcon = {
@@ -72,7 +72,7 @@ fun ZGPCTicketStatusDropDown(
                     },
                     text = {
                         Column {
-                            Text(text = selectionOption.statusName)
+                            Text(text = selectionOption.statusName ?: "")
                             //Text(text = selectionOption.statusTaskReferring, fontWeight = W100, fontSize = 10.sp)
                         }
                     },

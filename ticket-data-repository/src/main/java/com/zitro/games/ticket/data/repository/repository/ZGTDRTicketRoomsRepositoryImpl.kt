@@ -6,7 +6,9 @@ import com.zitro.games.ticket.domain.entity.rooms.ZGTDTicketRoomsRequest
 import com.zitro.games.ticket.domain.entity.rooms.ZGTDTicketRoomsResponse
 import com.zitro.games.ticket.domain.repository.ZGTDTicketRoomsRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flattenConcat
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -17,8 +19,13 @@ class ZGTDRTicketRoomsRepositoryImpl @Inject constructor(
 ): ZGTDTicketRoomsRepository {
 
     override fun getRooms(request: ZGTDTicketRoomsRequest): Flow<List<ZGTDTicketRoomsResponse>> =
-        remoteDataSource.getRooms(request).onEach {
-            localDataSource.setRooms(it)
-        }
-
+        localDataSource.getRooms(request).map {
+            if (it.isEmpty()){
+                return@map remoteDataSource.getRooms(request).onEach { list ->
+                    localDataSource.setRooms(list, request.regionId)
+                }
+            } else{
+                flow { emit(it) }
+            }
+    }.flattenConcat()
 }

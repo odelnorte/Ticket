@@ -13,7 +13,7 @@ class ZGTDTicketRegistrationUseCase(
 ) : ZGDCUseCase<ZGTDTicketRegistrationUseCase.Request, ZGTDTicketRegistrationUseCase.Response>(configuration) {
 
     override fun process(request: Request): Flow<Response> =
-        ticketRegistrationRepository.sendTicket(request.registrationRequest).map {
+        ticketRegistrationRepository.registration(request.registrationRequest).map {
             Response(it)
         }
 

@@ -19,11 +19,21 @@ data class ZGPTRoomsApiModel(
     val listRooms: List<ZGPTRoomsListModel> = listOf()
 ): ZGTPTicketApiModel
 
+data class ZGPTRegionApiModel(
+    val listRegions: List<ZGPTRegionListModel> = listOf()
+): ZGTPTicketApiModel
+
+object ZGPTUpdateStatusApiModel: ZGTPTicketApiModel
+
+data class ZGPTSessionUpdateStatusApiModel(
+    val update: Int
+): ZGTPTicketApiModel
+
 
 data class ZGPTStatusListModel(
-    val statusId: Int = 39,
-    val statusName: String = "",
-    val statusTaskReferring: String = ""
+    val statusId: Int? = null,
+    val statusName: String? = "",
+    val statusTaskReferring: String? = ""
 ){
     fun getIcon() = when(statusId){
         ZGC_TYPE_STATUS_SERVICE -> {
@@ -41,6 +51,7 @@ data class ZGPTStatusListModel(
         ZGC_TYPE_STATUS_VACATION -> {
             R.drawable.zgm_ic_vacation
         }
+
         ZGC_TYPE_STATUS_INABILITY -> {
             R.drawable.zgm_ic_inability
         }
@@ -52,7 +63,12 @@ data class ZGPTStatusListModel(
 }
 
 data class ZGPTRoomsListModel(
-    val roomId: Int = 0,
-    val roomName: String = ""
+    val roomId: Int? = null,
+    val roomName: String? = null
+)
+
+data class ZGPTRegionListModel(
+    val regionId: Int? = null,
+    val regionName: String? = null
 )
 

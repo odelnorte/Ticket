@@ -1,9 +1,10 @@
 package com.zitro.games.ticket.domain.entity.registration
 
 data class ZGTDTicketRegistrationRequest (
-    val client: String,
-    val model: String,
-    val noSeries: String,
+    val roomId: Int,
+    val usuId: Long,
+    val machineId: Int,
+    val failureId: Int,
     val failure: String,
-    val additionalInfo: String,
+    val token: String
 )

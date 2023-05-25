@@ -5,5 +5,5 @@ import com.zitro.games.ticket.domain.entity.registration.ZGTDTicketRegistrationR
 import kotlinx.coroutines.flow.Flow
 
 interface ZGTDTicketRegistrationRepository {
-    fun sendTicket(request: ZGTDTicketRegistrationRequest): Flow<ZGTDTicketRegistrationResponse>
+    fun registration(request: ZGTDTicketRegistrationRequest): Flow<ZGTDTicketRegistrationResponse>
 }

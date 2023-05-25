@@ -8,7 +8,7 @@ buildscript {
                 compose_viewpager    : '0.20.3',
                 lifecycleRuntimeKtx  : "2.5.1",
                 activityCompose      : "1.6.1",
-                composeMaterial3     : "1.0.1",
+                composeMaterial3     : "1.1.0-alpha06",
                 coroutines           : "1.6.4",
                 okHttp               : "4.9.0",
                 retrofit             : "2.9.0",
@@ -45,6 +45,7 @@ buildscript {
                 productATService : "atServiceSpain",
                 directoriesAtService : [
                         "ATServiceSpain/modules/ticket",
+                        "Menu/modules/ticket",
                 ]
         ]
 

@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ZGTDRLocalTicketRoomsDataSource {
     fun getRooms(request: ZGTDTicketRoomsRequest): Flow<List<ZGTDTicketRoomsResponse>>
-    suspend fun setRooms(listStatus: List<ZGTDTicketRoomsResponse>)
+    suspend fun setRooms(listStatus: List<ZGTDTicketRoomsResponse>, regionId: Int)
 }

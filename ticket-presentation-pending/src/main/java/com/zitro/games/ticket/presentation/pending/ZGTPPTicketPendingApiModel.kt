@@ -23,6 +23,6 @@ data class ZGTPPTicketRoomsApiModel(
 
 
 data class ZGTPPTicketRoomsModel(
-    val roomId: Int = 0,
-    val roomName: String = ""
+    val roomId: Int? = null,
+    val roomName: String? = null
 )

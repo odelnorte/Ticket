@@ -13,11 +13,11 @@ class ZGTDTicketRoomsUseCase(
 ) : ZGDCUseCase<ZGTDTicketRoomsUseCase.Request, ZGTDTicketRoomsUseCase.Response>(configuration) {
 
     override fun process(request: Request): Flow<Response> =
-        ticketRoomsRepository.getRooms(request.statusRequest).map {
+        ticketRoomsRepository.getRooms(request.roomRequest).map {
             Response(it)
         }
 
-    data class Request(val statusRequest: ZGTDTicketRoomsRequest) : ZGDCUseCase.Request
+    data class Request(val roomRequest: ZGTDTicketRoomsRequest) : ZGDCUseCase.Request
 
-    data class Response(val statusResponse: List<ZGTDTicketRoomsResponse>) : ZGDCUseCase.Response
+    data class Response(val roomResponse: List<ZGTDTicketRoomsResponse>) : ZGDCUseCase.Response
 }

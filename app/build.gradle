@@ -42,7 +42,7 @@ dependencies {
 
     implementation(project(path: ':modules:qr:barcode-scanner-presentation'))
     implementation(project(path: ':modules:qr:barcode-camera-presentation'))
-    implementation(project(path: ':modules:barcode_scanner_zebra'))
+    //implementation(project(path: ':modules:barcode_scanner_zebra'))
 
     implementation(project(path: ":ticket-data-local"))
     implementation(project(path: ":ticket-data-repository"))

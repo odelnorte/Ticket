@@ -14,12 +14,12 @@ class ZGTDLTicketRoomsLocalDataSourceImpl @Inject constructor(
 ) : ZGTDRLocalTicketRoomsDataSource {
 
     override fun getRooms(request: ZGTDTicketRoomsRequest): Flow<List<ZGTDTicketRoomsResponse>>  =
-        ticketRoomsDao.getTicketRoomsEntity().map {
+        ticketRoomsDao.getTicketRoomsEntity(request.regionId).map {
             convertResponse(it)
         }
 
-    override suspend fun setRooms(listStatus: List<ZGTDTicketRoomsResponse>) {
-        ticketRoomsDao.insertTicketRoomsEntity(convert(listStatus))
+    override suspend fun setRooms(listStatus: List<ZGTDTicketRoomsResponse>, regionId: Int) {
+        ticketRoomsDao.insertTicketRoomsEntity(convert(listStatus, regionId))
     }
 
     private fun convertResponse(listStatus: List<ZGCDLRoomsEntity>): List<ZGTDTicketRoomsResponse> {
@@ -28,7 +28,8 @@ class ZGTDLTicketRoomsLocalDataSourceImpl @Inject constructor(
             listStatusResponse.add(
                 ZGTDTicketRoomsResponse(
                     roomId = it.roomId,
-                    roomName = it.roomName
+                    roomName = it.roomName,
+                    officeId = it.officeId
                 )
             )
         }
@@ -37,13 +38,15 @@ class ZGTDLTicketRoomsLocalDataSourceImpl @Inject constructor(
 
     }
 
-    private fun convert(listStatus: List<ZGTDTicketRoomsResponse>): List<ZGCDLRoomsEntity> {
+    private fun convert(listStatus: List<ZGTDTicketRoomsResponse>, regionId: Int): List<ZGCDLRoomsEntity> {
         val listStatusEntity = mutableListOf<ZGCDLRoomsEntity>()
         listStatus.forEach {
             listStatusEntity.add(
                 ZGCDLRoomsEntity(
                     roomId = it.roomId,
-                    roomName = it.roomName
+                    regionId = regionId,
+                    roomName = it.roomName,
+                    officeId = it.officeId
                 )
             )
         }

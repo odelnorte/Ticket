@@ -6,6 +6,8 @@ import com.zitro.games.ticket.data.repository.remote.ZGTDRRemoteTicketStatusData
 import com.zitro.games.ticket.domain.entity.ZGTDUseCaseException
 import com.zitro.games.ticket.domain.entity.status.ZGTDTicketStatusRequest
 import com.zitro.games.ticket.domain.entity.status.ZGTDTicketStatusResponse
+import com.zitro.games.ticket.domain.entity.status.ZGTDTicketUpdateStatusRequest
+import com.zitro.games.ticket.domain.entity.status.ZGTDTicketUpdateStatusResponse
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -28,6 +30,18 @@ class ZGTDRemoteTicketStatusDataSourceImpl @Inject constructor(
         throw ZGTDUseCaseException.TicketStatusException(it)
     }
 
+    override fun setStatus(request: ZGTDTicketUpdateStatusRequest) = flow {
+        emit(
+            statusService.updateStatus(
+                request.token,
+                request.statusId
+            )
+        )
+    }.map {
+        ZGTDTicketUpdateStatusResponse
+    }.catch {
+        throw ZGTDUseCaseException.TicketStatusException(it)
+    }
 
     private fun convert(listStatus: List<ZGTDRTicketStatusApiModel>): List<ZGTDTicketStatusResponse>{
         val listStatusResponse = mutableListOf<ZGTDTicketStatusResponse>()
@@ -41,8 +55,6 @@ class ZGTDRemoteTicketStatusDataSourceImpl @Inject constructor(
                 )
             )
         }
-
          return listStatusResponse
     }
-
 }

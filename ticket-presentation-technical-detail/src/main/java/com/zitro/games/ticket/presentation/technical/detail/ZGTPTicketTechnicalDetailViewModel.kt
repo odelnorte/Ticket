@@ -39,7 +39,7 @@ class ZGTPTicketTechnicalDetailViewModel @Inject constructor(
         }
     }
 
-    override fun initState(): UiState<ZGTPTicketDetailApiModel> = UiState.NotInit
+    override fun initState(): UiState<ZGTPTicketDetailApiModel> = UiState.NotLoading
 
 
 

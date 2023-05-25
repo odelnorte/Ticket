@@ -41,7 +41,7 @@ fun ZGTPPTicketRoomsDropDown(
     ) {
         TextField(
             readOnly = true,
-            value = room.value.roomName,
+            value = room.value.roomName ?: "",
             modifier = Modifier.menuAnchor(),
             onValueChange = {
                 room.value = room.value.copy(roomName = it)
@@ -64,14 +64,13 @@ fun ZGTPPTicketRoomsDropDown(
             },
             //modifier = Modifier.exposedDropdownSize()
         ) {
-            val list = if (room.value.roomName.isNotEmpty()){
+            val list = if (!room.value.roomName.isNullOrEmpty()){
                 data.filter {
-                    it.roomName
-                        .lowercase(Locale.ROOT)
-                        .contains(
-                            room.value.roomName
-                                .lowercase(Locale.ROOT)
-                        )
+                    (it.roomName
+                        ?.lowercase(Locale.ROOT)
+                        ?.contains(
+                            room.value.roomName?.lowercase(Locale.ROOT)?: "") ?: ""
+                            ) as? Boolean ?: false
                 }
             } else data
 
@@ -79,7 +78,7 @@ fun ZGTPPTicketRoomsDropDown(
                 DropdownMenuItem(
                     text = {
                         Column {
-                            Text(text = selectionOption.roomName)
+                            Text(text = selectionOption.roomName ?: "" )
                         }
                     },
                     onClick = {

@@ -14,7 +14,7 @@ class ZGTPTicketRoomsConverter @Inject constructor(@ApplicationContext private v
     CommonResultConverter<ZGTDTicketRoomsUseCase.Response, ZGTPTicketApiModel>() {
 
     override fun convertSuccess(data: ZGTDTicketRoomsUseCase.Response) =
-        convert(data.statusResponse)
+        convert(data.roomResponse)
 
     private fun convert(statusResponse: List<ZGTDTicketRoomsResponse>): ZGPTRoomsApiModel {
         val listStatusApiModel = mutableListOf<ZGPTRoomsListModel>()
